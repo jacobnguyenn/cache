@@ -20,7 +20,6 @@ func NewDoubleLinkedList() *DoublyLinkedList {
 	return &DoublyLinkedList{}
 }
 func (c *DoublyLinkedList) PushBack(node *ListNode) {
-	println("in pushback")
 	// empty list
 	if c.head == nil {
 		c.head = node
