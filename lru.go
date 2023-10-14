@@ -8,7 +8,7 @@ import (
 
 type LRUCache struct {
 	store   DoublyLinkedList
-	lock    sync.Mutex
+	lock    sync.RWMutex
 	hashMap map[string]*ListNode
 	size    int
 }
@@ -22,8 +22,8 @@ func NewLRUCache(size int) ICache {
 }
 
 func (c *LRUCache) Get(key string) *CacheElem {
-	c.lock.Lock()
-	defer c.lock.Unlock()
+	c.lock.RLock()
+	defer c.lock.RUnlock()
 	log.WithFields(log.Fields{
 		"key": key,
 	}).Info("Getting from cache")
@@ -62,6 +62,8 @@ func (c *LRUCache) Set(elem *CacheElem) {
 }
 
 func (c *LRUCache) Evict() {
+	c.lock.Lock()
+	defer c.lock.Unlock()
 	c.store.PopHead()
 	c.size = c.store.Size()
 }
